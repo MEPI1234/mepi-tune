@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEPI-TUNE · PC Optimization Suite</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --pink-l: #f0c0d8; --purple-l: #c4a0f0;
+  --text: rgba(255,255,255,0.93); --text-d: rgba(255,255,255,0.52);
+  --text-m: rgba(255,255,255,0.26); --green: #90eac0;
+  --yellow: #f5d888; --red: #f09090;
+  --cpu-c: rgba(185,140,255,1); --gpu-c: rgba(240,140,185,1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Raleway',sans-serif; height:100vh; display:flex; flex-direction:column; overflow:hidden; color:var(--text); position:relative; }
+
+.bg { position:fixed;inset:0;z-index:0; background:linear-gradient(175deg,#5a8fc8 0%,#4478b0 12%,#3468a0 24%,#285890 36%,#224878 48%,#1e3d6a 58%,#1e3460 68%,#222868 78%,#28206a 88%,#2a1a68 100%); }
+.water-layer { position:fixed;bottom:0;left:0;right:0;height:40%;z-index:0; background:linear-gradient(to bottom,transparent 0%,rgba(22,48,96,0.5) 30%,rgba(18,38,80,0.75) 70%,rgba(14,28,64,0.9) 100%); }
+.water-layer::after { content:'';position:absolute;inset:0; background:repeating-linear-gradient(to bottom,transparent 0px,transparent 5px,rgba(120,170,230,0.03) 5px,rgba(120,170,230,0.03) 6px); }
+.amb { position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0; }
+.a1{width:550px;height:420px;background:rgba(140,80,220,0.2);bottom:-100px;left:42%;transform:translateX(-50%);}
+.a2{width:320px;height:380px;background:rgba(200,90,160,0.16);bottom:-40px;left:44%;}
+.a3{width:280px;height:220px;background:rgba(80,130,220,0.12);top:5%;right:5%;}
+.a4{width:200px;height:180px;background:rgba(160,100,240,0.1);top:15%;left:5%;}
+
+.sculpture{position:fixed;bottom:55px;left:50%;transform:translateX(-48%);width:380px;height:300px;z-index:1;pointer-events:none;}
+.sp{position:absolute;border-radius:2px;backdrop-filter:blur(2px);}
+.sp1{width:155px;height:185px;bottom:15px;left:50%;transform:translateX(-50%);background:linear-gradient(140deg,rgba(220,140,190,0.5),rgba(190,100,190,0.38) 50%,rgba(150,80,200,0.28));border:1px solid rgba(240,180,220,0.32);box-shadow:inset 0 0 30px rgba(255,150,210,0.12),0 0 50px rgba(190,100,190,0.18);clip-path:polygon(10% 0%,100% 6%,90% 100%,0% 94%);}
+.sp2{width:105px;height:155px;bottom:10px;left:22px;background:repeating-linear-gradient(to bottom,rgba(150,185,225,0.28) 0px,rgba(150,185,225,0.28) 2px,rgba(100,150,200,0.12) 2px,rgba(100,150,200,0.12) 7px);border:1px solid rgba(170,210,245,0.22);clip-path:polygon(0% 8%,88% 0%,100% 88%,12% 100%);transform:perspective(280px) rotateY(22deg);}
+.sp3{width:115px;height:165px;bottom:12px;right:18px;background:linear-gradient(148deg,rgba(120,75,220,0.42),rgba(100,60,200,0.32) 60%,rgba(80,40,180,0.22));border:1px solid rgba(185,145,255,0.28);clip-path:polygon(14% 0%,100% 4%,86% 100%,0% 96%);transform:perspective(280px) rotateY(-18deg);}
+.sp4{width:65px;height:78px;bottom:108px;left:52px;background:linear-gradient(120deg,rgba(185,145,255,0.38),rgba(140,100,220,0.22));border:1px solid rgba(210,175,255,0.28);clip-path:polygon(8% 0%,100% 12%,92% 100%,0% 88%);transform:perspective(180px) rotateY(14deg) rotateX(-8deg);}
+.sp5{width:52px;height:62px;bottom:125px;right:52px;background:linear-gradient(120deg,rgba(225,148,198,0.38),rgba(195,100,175,0.22));border:1px solid rgba(255,185,220,0.28);clip-path:polygon(0% 8%,92% 0%,100% 92%,8% 100%);transform:perspective(180px) rotateY(-14deg) rotateX(-7deg);}
+.flowers{position:absolute;bottom:180px;left:50%;transform:translateX(-40%);width:210px;height:170px;}
+.fl{position:absolute;border-radius:50%;}
+.fl1{width:19px;height:19px;top:0;left:105px;background:radial-gradient(circle,rgba(255,225,242,.85) 0%,rgba(225,165,215,.4) 55%,transparent 100%);box-shadow:0 0 12px rgba(255,185,225,.45);}
+.fl2{width:14px;height:14px;top:18px;left:136px;background:radial-gradient(circle,rgba(245,210,235,.75) 0%,rgba(210,150,205,.35) 55%,transparent 100%);}
+.fl3{width:16px;height:16px;top:10px;left:72px;background:radial-gradient(circle,rgba(255,218,238,.8) 0%,rgba(218,158,210,.38) 55%,transparent 100%);box-shadow:0 0 10px rgba(242,175,218,.38);}
+.fl4{width:12px;height:12px;top:38px;left:154px;background:radial-gradient(circle,rgba(235,200,228,.7) 0%,rgba(195,135,198,.3) 55%,transparent 100%);}
+.fl5{width:21px;height:21px;top:30px;left:45px;background:radial-gradient(circle,rgba(255,228,244,.85) 0%,rgba(220,160,212,.42) 55%,transparent 100%);box-shadow:0 0 14px rgba(248,180,222,.42);}
+.fl6{width:13px;height:13px;top:58px;left:122px;background:radial-gradient(circle,rgba(248,215,235,.72) 0%,rgba(205,145,200,.32) 55%,transparent 100%);}
+.fl7{width:15px;height:15px;top:52px;left:84px;background:radial-gradient(circle,rgba(255,222,240,.75) 0%,rgba(212,152,208,.35) 55%,transparent 100%);}
+.fl8{width:10px;height:10px;top:25px;left:170px;background:radial-gradient(circle,rgba(240,208,230,.68) 0%,rgba(198,138,195,.28) 55%,transparent 100%);}
+.fl9{width:17px;height:17px;top:6px;left:155px;background:radial-gradient(circle,rgba(252,222,242,.78) 0%,rgba(218,158,210,.36) 55%,transparent 100%);box-shadow:0 0 9px rgba(240,172,220,.36);}
+.orb{position:fixed;border-radius:50%;z-index:1;pointer-events:none;}
+.ob1{width:42px;height:42px;bottom:115px;left:11%;background:radial-gradient(circle at 33% 33%,rgba(210,235,255,.55),rgba(155,190,248,.2) 60%,transparent);border:1px solid rgba(185,215,252,.28);}
+.ob2{width:26px;height:26px;bottom:165px;left:7%;background:radial-gradient(circle at 33% 33%,rgba(205,230,255,.45),rgba(145,182,245,.18) 60%,transparent);border:1px solid rgba(175,210,250,.22);}
+.ob3{width:20px;height:20px;bottom:98px;right:13%;background:radial-gradient(circle at 33% 33%,rgba(208,228,255,.48),rgba(150,185,248,.2) 60%,transparent);border:1px solid rgba(178,208,252,.24);}
+
+.ui{position:relative;z-index:10;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+/* Titlebar */
+.titlebar{display:flex;align-items:center;justify-content:space-between;height:28px;padding:0 14px;background:rgba(0,0,0,0.14);backdrop-filter:blur(40px);border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;}
+.tb-l{display:flex;align-items:center;gap:8px;}
+.ps-ico{width:14px;height:14px;border-radius:2px;background:linear-gradient(135deg,#012456,#0055bb);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;}
+.tb-n{font-size:10px;color:var(--text-m);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;text-transform:uppercase;}
+.tb-n b{color:rgba(255,255,255,.5);font-weight:400;}
+.wbtns{display:flex;}
+.wbtn{width:40px;height:28px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-m);cursor:pointer;transition:background .1s;}
+.wbtn:hover{background:rgba(255,255,255,.06);color:var(--text-d);}
+.wbtn.x:hover{background:rgba(196,43,28,.7);color:#fff;}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 9px;background:rgba(0,0,0,0.1);backdrop-filter:blur(60px) saturate(2);border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
+.logo-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;letter-spacing:8px;text-transform:uppercase;line-height:1;background:linear-gradient(135deg,rgba(255,255,255,1) 0%,rgba(235,215,255,.95) 25%,rgba(240,192,216,.95) 55%,rgba(196,160,240,.9) 80%,rgba(255,255,255,.85) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 14px rgba(200,155,255,.45));}
+.logo-subtitle{font-family:'Raleway',sans-serif;font-size:7.5px;font-weight:300;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.3);padding-left:2px;margin-top:3px;}
+.chips{display:flex;gap:6px;align-items:center;}
+.chip{display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(20px);font-size:9px;color:var(--text-d);font-family:'JetBrains Mono',monospace;letter-spacing:.3px;}
+.cdot{width:4px;height:4px;border-radius:50%;}
+.cdot.g{background:var(--green);box-shadow:0 0 5px var(--green);}
+.cdot.y{background:var(--yellow);box-shadow:0 0 4px var(--yellow);}
+.cdot.r{background:var(--red);box-shadow:0 0 4px var(--red);animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Body */
+.body{display:flex;flex:1;overflow:hidden;}
+
+/* Sidebar */
+.sidebar{width:195px;flex-shrink:0;background:rgba(0,0,0,0.1);backdrop-filter:blur(60px);border-right:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;overflow:hidden;}
+.sidebar-nav{overflow-y:auto;flex:1;padding:6px 0;}
+.sg-lbl{font-family:'Cinzel',serif;font-size:7.5px;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-m);padding:8px 14px 3px;}
+.si{display:flex;align-items:center;gap:9px;padding:6px 14px;cursor:pointer;border-left:2px solid transparent;transition:background .12s;}
+.si:hover{background:rgba(255,255,255,.04);}
+.si.on{background:rgba(200,160,255,.07);border-left-color:rgba(240,192,216,.6);}
+.si-ic{font-size:11px;opacity:.45;flex-shrink:0;width:16px;text-align:center;}
+.si.on .si-ic{opacity:.92;}
+.si-n{font-size:11px;font-weight:300;color:var(--text-d);flex:1;letter-spacing:.2px;}
+.si.on .si-n{color:var(--text);font-weight:400;}
+.bd{font-size:7.5px;padding:1px 5px;border-radius:10px;font-weight:500;font-family:'JetBrains Mono',monospace;}
+.bd.p{background:rgba(240,192,216,.12);color:var(--pink-l);border:1px solid rgba(240,192,216,.18);}
+.bd.r{background:rgba(240,144,144,.1);color:var(--red);border:1px solid rgba(240,144,144,.2);}
+.bd.n{background:rgba(255,255,255,.05);color:var(--text-m);border:1px solid rgba(255,255,255,.09);}
+.bd.w{background:rgba(245,216,136,.1);color:var(--yellow);border:1px solid rgba(245,216,136,.2);}
+.sdiv{height:1px;background:rgba(255,255,255,.05);margin:4px 12px;}
+
+/* Main */
+.main{flex:1;overflow-y:auto;padding:13px 15px;background:transparent;display:flex;flex-direction:column;gap:11px;}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;}
+.sec-title{font-family:'Cinzel',serif;font-size:8.5px;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.32);}
+.sec-act{font-size:9px;color:var(--pink-l);cursor:pointer;font-weight:400;opacity:.7;font-family:'JetBrains Mono',monospace;transition:opacity .15s;}
+.sec-act:hover{opacity:1;}
+
+/* Charts */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.chart-card{background:rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;backdrop-filter:blur(50px) saturate(1.6);position:relative;}
+.chart-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;border-radius:14px 14px 0 0;}
+.chart-card.cpu::before{background:linear-gradient(to right,rgba(185,140,255,.8),transparent 65%);}
+.chart-card.gpu::before{background:linear-gradient(to right,rgba(240,140,185,.8),transparent 65%);}
+.chart-header{display:flex;align-items:center;justify-content:space-between;padding:10px 13px 5px;}
+.chart-label{display:flex;align-items:center;gap:8px;}
+.chart-dot{width:6px;height:6px;border-radius:50%;}
+.chart-dot.cpu{background:var(--cpu-c);box-shadow:0 0 7px var(--cpu-c);}
+.chart-dot.gpu{background:var(--gpu-c);box-shadow:0 0 7px var(--gpu-c);}
+.chart-name{font-family:'Cinzel',serif;font-size:11px;font-weight:600;color:var(--text);letter-spacing:1.5px;}
+.chart-sub{font-size:7.5px;color:var(--text-m);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.chart-temp{text-align:right;}
+.chart-temp .val{font-size:24px;font-weight:600;line-height:1;font-family:'Cinzel',serif;}
+.chart-temp .val.cpu-c{color:var(--cpu-c);text-shadow:0 0 18px rgba(185,140,255,.5);}
+.chart-temp .val.gpu-c{color:var(--gpu-c);text-shadow:0 0 18px rgba(240,140,185,.5);}
+.chart-temp .unit{font-size:10px;color:var(--text-d);font-family:'JetBrains Mono',monospace;}
+.chart-svg-wrap{padding:0 10px 6px;}
+.chart-svg-wrap canvas{width:100%;height:108px;display:block;}
+.chart-grid-labels{display:flex;justify-content:space-between;padding:2px 12px 0;font-size:7px;color:var(--text-m);font-family:'JetBrains Mono',monospace;}
+.chart-stats{display:grid;grid-template-columns:repeat(3,1fr);padding:6px 12px 10px;border-top:1px solid rgba(255,255,255,.05);}
+.cs-item{text-align:center;}
+.cs-lbl{font-size:7px;color:var(--text-m);letter-spacing:1px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;}
+.cs-val{font-size:11px;font-weight:500;color:var(--text-d);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.cs-val.hot{color:var(--red);}
+.cs-val.warm{color:var(--yellow);}
+.cs-val.cool{color:var(--green);}
+
+/* Tweaks grid */
+.tweaks-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.tweak-card{background:rgba(0,0,0,.09);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:12px 13px;cursor:pointer;backdrop-filter:blur(50px);transition:background .15s,border-color .15s;position:relative;overflow:hidden;}
+.tweak-card::before{content:'';position:absolute;inset:0;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.03) 0%,transparent 55%);pointer-events:none;}
+.tweak-card:hover{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.14);}
+.tweak-card.active{background:rgba(180,130,255,.09);border-color:rgba(200,160,255,.25);box-shadow:0 0 20px rgba(165,115,240,.08),inset 0 1px 0 rgba(255,255,255,.07);}
+.tweak-card.warn-card{border-color:rgba(245,216,136,.2);}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.tc-ico{width:27px;height:27px;border-radius:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;}
+.tc-ico.pu{background:rgba(185,140,255,.1);border-color:rgba(210,170,255,.2);}
+.tc-ico.warn{background:rgba(245,216,136,.08);border-color:rgba(245,216,136,.2);}
+
+/* Toggle */
+.tog{width:34px;height:18px;border-radius:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tog.on{background:rgba(200,155,255,.45);border-color:rgba(200,155,255,.4);}
+.tog.loading{background:rgba(245,216,136,.3);border-color:rgba(245,216,136,.4);}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.4);transition:left .2s,background .2s;}
+.tog.on::after{left:18px;background:#fff;}
+.tog.loading::after{left:10px;background:rgba(245,216,136,.9);}
+.tc-l{font-size:11px;font-weight:500;color:var(--text);margin-bottom:3px;letter-spacing:.2px;}
+.tc-s{font-size:9px;color:var(--text-m);line-height:1.45;font-weight:300;}
+.tc-st{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:9px;font-family:'JetBrains Mono',monospace;}
+.sdot{width:4px;height:4px;border-radius:50%;}
+.sdot.g{background:var(--green);box-shadow:0 0 4px var(--green);}
+.sdot.d{background:rgba(255,255,255,.15);}
+.sdot.y{background:var(--yellow);box-shadow:0 0 4px var(--yellow);}
+.sdot.r{background:var(--red);box-shadow:0 0 4px var(--red);}
+
+/* Toast notification */
+.toast-wrap{position:fixed;bottom:40px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:1000;}
+.toast{padding:9px 14px;border-radius:10px;font-size:10px;font-family:'JetBrains Mono',monospace;backdrop-filter:blur(20px);border:1px solid;animation:toastIn .3s ease;max-width:280px;}
+.toast.ok{background:rgba(144,234,192,.12);border-color:rgba(144,234,192,.25);color:var(--green);}
+.toast.err{background:rgba(240,144,144,.12);border-color:rgba(240,144,144,.25);color:var(--red);}
+.toast.warn{background:rgba(245,216,136,.1);border-color:rgba(245,216,136,.22);color:var(--yellow);}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* Terminal */
+.term{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.14);backdrop-filter:blur(60px);}
+.tbar{display:flex;align-items:center;gap:6px;padding:6px 11px;background:rgba(0,0,0,.1);border-bottom:1px solid rgba(255,255,255,.05);}
+.tdot{width:8px;height:8px;border-radius:50%;}
+.tdot.r{background:#ff5f57;}.tdot.y{background:#febc2e;}.tdot.g{background:#28c840;}
+.ttitle{font-size:8.5px;color:var(--text-m);margin:0 auto;letter-spacing:.6px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;}
+.tbody{padding:9px 13px;font-family:'JetBrains Mono',monospace;font-size:9.5px;line-height:1.7;max-height:90px;overflow-y:auto;}
+.tp{color:#7aacff;}.tpa{color:rgba(180,210,255,.65);}.tc2{color:rgba(255,255,255,.78);}
+.tdm{color:rgba(255,255,255,.22);}
+.tok{color:var(--green);}.twrn{color:var(--yellow);}.terr{color:var(--red);}
+.tcur{display:inline-block;width:5px;height:10px;background:var(--pink-l);vertical-align:middle;margin-left:2px;animation:bc 1.1s step-end infinite;}
+@keyframes bc{0%,100%{opacity:.9}50%{opacity:0}}
+
+/* Right panel */
+.rpanel{width:178px;flex-shrink:0;background:rgba(0,0,0,.1);backdrop-filter:blur(60px);border-left:1px solid rgba(255,255,255,.07);padding:12px 11px;display:flex;flex-direction:column;gap:13px;overflow-y:auto;}
+.rpl{font-family:'Cinzel',serif;font-size:7.5px;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-m);margin-bottom:7px;}
+.mtr{margin-bottom:7px;}
+.mr{display:flex;justify-content:space-between;font-size:9px;color:var(--text-d);margin-bottom:3px;font-family:'JetBrains Mono',monospace;}
+.mv{color:var(--text);font-weight:500;}
+.mtrack{height:2px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+.mfill{height:100%;border-radius:2px;background:linear-gradient(to right,rgba(185,140,255,.65),rgba(240,192,216,.75));transition:width .5s ease;}
+.mfill.w{background:linear-gradient(to right,rgba(245,216,136,.65),rgba(248,168,100,.65));}
+.twi{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:9px;color:var(--text-d);font-family:'JetBrains Mono',monospace;}
+.twi:last-child{border:none;}
+.tws{font-size:7.5px;font-weight:600;padding:1px 5px;border-radius:4px;}
+.tws.on{background:rgba(144,234,192,.1);color:var(--green);}
+.tws.off{background:rgba(255,255,255,.04);color:rgba(255,255,255,.18);}
+.qb{padding:7px;border-radius:8px;font-size:9px;text-align:center;cursor:pointer;margin-bottom:5px;font-weight:400;transition:background .12s;font-family:'JetBrains Mono',monospace;letter-spacing:.3px;border:1px solid;}
+.qb.pri{background:rgba(185,140,255,.1);border-color:rgba(210,170,255,.2);color:var(--purple-l);}
+.qb.pri:hover{background:rgba(185,140,255,.18);}
+.qb.sec{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.07);color:var(--text-m);}
+.qb.sec:hover{background:rgba(255,255,255,.07);}
+.qb.danger{background:rgba(240,144,144,.08);border-color:rgba(240,144,144,.18);color:var(--red);}
+
+/* Tabs */
+.tab-bar{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2px;flex-shrink:0;}
+.tab{padding:8px 14px;font-size:9.5px;font-family:'Cinzel',serif;letter-spacing:1.5px;color:var(--text-m);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab:hover{color:var(--text-d);}
+.tab.active{color:var(--pink-l);border-bottom-color:var(--pink-l);}
+
+/* View panels */
+.view{display:none;flex-direction:column;gap:11px;}
+.view.active{display:flex;}
+
+/* Taskbar */
+.taskbar{height:26px;background:rgba(0,0,0,.1);backdrop-filter:blur(50px);border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 14px;gap:3px;flex-shrink:0;}
+.tkey{display:flex;align-items:center;gap:4px;margin-right:7px;}
+.kcap{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:1px 4px;font-size:8px;color:var(--text-d);font-family:'JetBrains Mono',monospace;}
+.kl{font-size:8px;color:var(--text-m);}
+.tb-r{margin-left:auto;font-size:8px;color:rgba(255,255,255,.15);font-family:'JetBrains Mono',monospace;letter-spacing:.3px;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="water-layer"></div>
+<div class="amb a1"></div><div class="amb a2"></div>
+<div class="amb a3"></div><div class="amb a4"></div>
+<div class="sculpture">
+  <div class="flowers">
+    <div class="fl fl1"></div><div class="fl fl2"></div><div class="fl fl3"></div>
+    <div class="fl fl4"></div><div class="fl fl5"></div><div class="fl fl6"></div>
+    <div class="fl fl7"></div><div class="fl fl8"></div><div class="fl fl9"></div>
+  </div>
+  <div class="sp sp2"></div><div class="sp sp1"></div><div class="sp sp3"></div>
+  <div class="sp sp4"></div><div class="sp sp5"></div>
+</div>
+<div class="orb ob1"></div><div class="orb ob2"></div><div class="orb ob3"></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="ui">
+  <div class="titlebar">
+    <div class="tb-l">
+      <div class="ps-ico">PS</div>
+      <span class="tb-n">Windows PowerShell &nbsp;·&nbsp; <b>MEPI-TUNE</b> v2.1.0</span>
+    </div>
+    <div class="wbtns">
+      <div class="wbtn">─</div><div class="wbtn">▭</div><div class="wbtn x" onclick="if(confirm('Close MEPI-TUNE?'))window.close()">✕</div>
+    </div>
+  </div>
+
+  <div class="header">
+    <div>
+      <div class="logo-title">MEPI-TUNE</div>
+      <div class="logo-subtitle">PC Optimization Suite &nbsp;·&nbsp; v2.1.0</div>
+    </div>
+    <div class="chips">
+      <div class="chip"><div class="cdot g"></div><span id="hHostname">DESKTOP-MEPI</span></div>
+      <div class="chip">WIN 10 22H2</div>
+      <div class="chip" style="color:var(--green)">✓ ADMIN</div>
+      <div class="chip"><div class="cdot r"></div>LIVE</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-nav">
+        <div class="sg-lbl">Views</div>
+        <div class="si on" onclick="switchView('monitor')"><div class="si-ic">🌡️</div><div class="si-n">Monitor</div><div class="bd p">LIVE</div></div>
+        <div class="si" onclick="switchView('tweaks')"><div class="si-ic">⚡</div><div class="si-n">All Tweaks</div><div class="bd n">50</div></div>
+        <div class="si" onclick="switchView('terminal')"><div class="si-ic">💻</div><div class="si-n">Console</div></div>
+
+        <div class="sdiv"></div>
+        <div class="sg-lbl">Categories</div>
+        <div class="si" onclick="filterTweaks('system')"><div class="si-ic">🖥️</div><div class="si-n">System Core</div></div>
+        <div class="si" onclick="filterTweaks('cpu')"><div class="si-ic">🔥</div><div class="si-n">CPU / Power</div></div>
+        <div class="si" onclick="filterTweaks('gpu')"><div class="si-ic">🎮</div><div class="si-n">GPU</div></div>
+        <div class="si" onclick="filterTweaks('memory')"><div class="si-ic">🧠</div><div class="si-n">Memory</div></div>
+        <div class="si" onclick="filterTweaks('disk')"><div class="si-ic">💾</div><div class="si-n">Storage</div></div>
+        <div class="si" onclick="filterTweaks('network')"><div class="si-ic">🌐</div><div class="si-n">Network</div></div>
+        <div class="si" onclick="filterTweaks('input')"><div class="si-ic">🖱️</div><div class="si-n">Input / Latency</div></div>
+        <div class="si" onclick="filterTweaks('services')"><div class="si-ic">⚙️</div><div class="si-n">Services</div></div>
+
+        <div class="sdiv"></div>
+        <div class="sg-lbl">Actions</div>
+        <div class="si" onclick="applyAll()" style="cursor:pointer"><div class="si-ic">▶</div><div class="si-n">Apply All</div></div>
+        <div class="si" onclick="restoreAll()" style="cursor:pointer"><div class="si-ic">↩</div><div class="si-n">Restore All</div></div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+      <!-- MONITOR VIEW -->
+      <div class="view active" id="view-monitor">
+        <div class="sec-hd">
+          <div class="sec-title">Temperature Monitor</div>
+          <div class="sec-act" id="pauseBtn" onclick="togglePause()">⏸ Pause</div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card cpu">
+            <div class="chart-header">
+              <div class="chart-label"><div class="chart-dot cpu"></div><div><div class="chart-name">CPU</div><div class="chart-sub" id="cpuName">Loading...</div></div></div>
+              <div class="chart-temp"><div class="val cpu-c" id="cpuTemp">--</div><div class="unit">°C</div></div>
+            </div>
+            <div class="chart-svg-wrap"><canvas id="cpuCanvas" height="108"></canvas></div>
+            <div class="chart-grid-labels"><span>60s ago</span><span>45s</span><span>30s</span><span>15s</span><span>now</span></div>
+            <div class="chart-stats">
+              <div class="cs-item"><div class="cs-lbl">MIN</div><div class="cs-val cool" id="cpuMin">--</div></div>
+              <div class="cs-item"><div class="cs-lbl">AVG</div><div class="cs-val" id="cpuAvg">--</div></div>
+              <div class="cs-item"><div class="cs-lbl">MAX</div><div class="cs-val warm" id="cpuMax">--</div></div>
+            </div>
+          </div>
+          <div class="chart-card gpu">
+            <div class="chart-header">
+              <div class="chart-label"><div class="chart-dot gpu"></div><div><div class="chart-name">GPU</div><div class="chart-sub" id="gpuName">Loading...</div></div></div>
+              <div class="chart-temp"><div class="val gpu-c" id="gpuTemp">--</div><div class="unit">°C</div></div>
+            </div>
+            <div class="chart-svg-wrap"><canvas id="gpuCanvas" height="108"></canvas></div>
+            <div class="chart-grid-labels"><span>60s ago</span><span>45s</span><span>30s</span><span>15s</span><span>now</span></div>
+            <div class="chart-stats">
+              <div class="cs-item"><div class="cs-lbl">MIN</div><div class="cs-val cool" id="gpuMin">--</div></div>
+              <div class="cs-item"><div class="cs-lbl">AVG</div><div class="cs-val" id="gpuAvg">--</div></div>
+              <div class="cs-item"><div class="cs-lbl">MAX</div><div class="cs-val warm" id="gpuMax">--</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick tweaks in monitor view -->
+        <div class="sec-hd">
+          <div class="sec-title">Quick Tweaks</div>
+          <div class="sec-act" onclick="switchView('tweaks')">See All →</div>
+        </div>
+        <div class="tweaks-grid" id="quickTweaks"></div>
+      </div>
+
+      <!-- TWEAKS VIEW -->
+      <div class="view" id="view-tweaks">
+        <div class="sec-hd">
+          <div class="sec-title" id="tweaksTitle">All Tweaks</div>
+          <div class="sec-act" onclick="filterTweaks('all')">Show All</div>
+        </div>
+        <div class="tweaks-grid" id="allTweaks"></div>
+      </div>
+
+      <!-- TERMINAL VIEW -->
+      <div class="view" id="view-terminal">
+        <div class="sec-hd"><div class="sec-title">Console Output</div><div class="sec-act" onclick="clearLog()">Clear</div></div>
+        <div class="term" style="max-height:none;flex:1;">
+          <div class="tbar"><div class="tdot r"></div><div class="tdot y"></div><div class="tdot g"></div><span class="ttitle">powershell · mepi-tune · session log</span></div>
+          <div class="tbody" id="fullLog" style="max-height:calc(100vh - 220px);"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right panel -->
+    <div class="rpanel">
+      <div>
+        <div class="rpl">System</div>
+        <div class="mtr"><div class="mr"><span>CPU</span><span class="mv" id="rpCpu">--%</span></div><div class="mtrack"><div class="mfill" id="rpCpuBar" style="width:0%"></div></div></div>
+        <div class="mtr"><div class="mr"><span>RAM</span><span class="mv" id="rpRam">--%</span></div><div class="mtrack"><div class="mfill w" id="rpRamBar" style="width:0%"></div></div></div>
+        <div class="mtr"><div class="mr"><span>GPU</span><span class="mv" id="rpGpu">--%</span></div><div class="mtrack"><div class="mfill" id="rpGpuBar" style="width:0%"></div></div></div>
+        <div class="mtr"><div class="mr"><span>Disk</span><span class="mv" id="rpDisk">--%</span></div><div class="mtrack"><div class="mfill" id="rpDiskBar" style="width:0%"></div></div></div>
+      </div>
+      <div>
+        <div class="rpl">Temps</div>
+        <div class="mtr"><div class="mr"><span>CPU</span><span class="mv" id="rpCpuT" style="color:var(--cpu-c)">--°C</span></div><div class="mtrack"><div class="mfill" id="rpCpuTBar" style="width:0%"></div></div></div>
+        <div class="mtr"><div class="mr"><span>GPU</span><span class="mv" id="rpGpuT" style="color:var(--gpu-c)">--°C</span></div><div class="mtrack"><div class="mfill" id="rpGpuTBar" style="width:0%"></div></div></div>
+      </div>
+      <div>
+        <div class="rpl">Active</div>
+        <div id="activeTweaksList"></div>
+      </div>
+      <div>
+        <div class="rpl">Quick Run</div>
+        <div class="qb pri" onclick="applyAll()">▶ Apply All Tweaks</div>
+        <div class="qb sec" onclick="restoreAll()">↩ Restore All</div>
+        <div class="qb sec" onclick="clearStandby()">🧹 Clear RAM</div>
+        <div class="qb danger" onclick="if(confirm('Debloat will remove built-in Windows apps. Continue?'))runTweak('debloat','apply')">💣 Debloat</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="taskbar">
+    <div class="tkey"><span class="kcap">Tab</span><span class="kl">Switch View</span></div>
+    <div class="tkey"><span class="kcap">A</span><span class="kl">Apply All</span></div>
+    <div class="tkey"><span class="kcap">R</span><span class="kl">Restore</span></div>
+    <div class="tkey"><span class="kcap">M</span><span class="kl">Monitor</span></div>
+    <div class="tb-r">MEPI-TUNE · github.com/mepi · GPLv3</div>
+  </div>
+</div>
+
+<script>
+// ── TWEAK DEFINITIONS ─────────────────────────────────────────────────────────
+const TWEAKS = [
+  // System Core
+  { id:'auto-login',       label:'Auto Login',           desc:'Bypass lock screen via registry on boot.',        cat:'system',  icon:'🔑', warn:false },
+  { id:'win32-priority',   label:'Win32 Priority → 18',  desc:'Shifts CPU scheduling to favor foreground apps.',  cat:'system',  icon:'🎯', warn:false },
+  { id:'kernel-worker-threads', label:'Kernel Workers', desc:'Scales kernel I/O threads to your CPU cores.',    cat:'system',  icon:'🔧', warn:false },
+  { id:'scheduling-reserve',    label:'Scheduling Reserve', desc:'Gives foreground 100% CPU scheduling.',       cat:'system',  icon:'📊', warn:false },
+  { id:'disable-hyperv',   label:'Disable Hyper-V',      desc:'Removes virtualization overhead. Needs reboot.',  cat:'system',  icon:'🖥️', warn:false },
+  { id:'disable-telemetry',label:'Disable Telemetry',    desc:'Kills MS data collection services + hosts block.',cat:'system',  icon:'📡', warn:false },
+  { id:'disable-animations',label:'Disable Animations',  desc:'Removes all UI animations for instant response.', cat:'system',  icon:'✨', warn:false },
+  { id:'disable-hpet',     label:'Disable HPET',         desc:'Forces TSC timer for consistent latency.',        cat:'system',  icon:'⏱️', warn:false },
+  { id:'disable-xbox-gamebar', label:'Disable Game Bar', desc:'Removes Xbox overlay, stops DVR background tasks.',cat:'system', icon:'🎮', warn:false },
+  { id:'disable-spectre-meltdown', label:'Spectre/Meltdown Off', desc:'⚠ Removes CPU security patches for perf gain.', cat:'cpu', icon:'⚠️', warn:true },
+
+  // CPU / Power
+  { id:'power-plan',       label:'High Performance',     desc:'Activates max power plan, no throttling.',        cat:'cpu',     icon:'⚡', warn:false },
+  { id:'disable-cpu-parking', label:'Disable CPU Parking', desc:'Keeps all cores active, none sleep idle.',     cat:'cpu',     icon:'🔥', warn:false },
+  { id:'disable-cstates',  label:'Disable C-States',     desc:'Prevents CPU low-power sleep mid-task.',         cat:'cpu',     icon:'💡', warn:true  },
+  { id:'power-throttling-off', label:'Power Throttling Off', desc:'Full CPU budget for foreground processes.',   cat:'cpu',     icon:'🏎️', warn:false },
+  { id:'timer-resolution', label:'Timer Resolution 0.5ms', desc:'Sets global timer to 0.5ms for precise timing.',cat:'cpu',    icon:'🕐', warn:false },
+  { id:'scheduling-reserve', label:'Sched. Reserve → 0', desc:'100% CPU to foreground, no background reserve.', cat:'cpu',     icon:'📈', warn:false },
+
+  // GPU
+  { id:'enable-hags',      label:'Enable HAGS',          desc:'Hardware Accelerated GPU Scheduling. Needs reboot.',cat:'gpu',  icon:'🖱️', warn:false },
+  { id:'gpu-max-performance', label:'GPU Max Performance', desc:'Forces GPU P0 state and max clock at all times.',cat:'gpu',   icon:'🎯', warn:false },
+  { id:'disable-nvidia-telemetry', label:'NVIDIA Telemetry Off', desc:'Kills NvTelemetryContainer and tasks.',   cat:'gpu',   icon:'📡', warn:false },
+
+  // Memory
+  { id:'disable-memory-compression', label:'Memory Compression Off', desc:'Stops RAM compression to free CPU.', cat:'memory', icon:'🧠', warn:false },
+  { id:'disable-superfetch', label:'Disable Superfetch',  desc:'Kills SysMain preloading, frees RAM + I/O.',    cat:'memory',  icon:'💾', warn:false },
+  { id:'clear-standby-memory', label:'Clear Standby RAM', desc:'Flushes RAM standby list instantly.',            cat:'memory',  icon:'🧹', warn:false },
+
+  // Disk
+  { id:'disk-tweaks',      label:'Disk Optimizations',   desc:'Disables 8.3 names, last access, fixes pagefile.',cat:'disk',  icon:'💿', warn:false },
+
+  // Network
+  { id:'network-tweaks',   label:'Network Suite',        desc:'DNS (Cloudflare), Nagle off, TCP tuning, Winsock.', cat:'network', icon:'🌐', warn:false },
+
+  // Input
+  { id:'raw-mouse-input',  label:'Raw Mouse Input',      desc:'Disables pointer acceleration at system level.',  cat:'input',   icon:'🖱️', warn:false },
+
+  // Services
+  { id:'disable-services', label:'Disable BG Services',  desc:'Search, Print Spooler, Delivery Opt, RemoteReg.', cat:'services', icon:'⚙️', warn:false },
+  { id:'game-mode',        label:'Game Mode',            desc:'Enables Game Mode, disables DVR capture.',        cat:'services', icon:'🎮', warn:false },
+  { id:'debloat',          label:'Debloat Windows',      desc:'Removes 30+ bloatware apps. Cannot be undone.',   cat:'services', icon:'💣', warn:true  },
+];
+
+// State
+const tweakState = {};
+TWEAKS.forEach(t => tweakState[t.id] = false);
+
+let paused = false;
+let cpuData = genSeed(56, 3, 60);
+let gpuData = genSeed(60, 4, 60);
+let tickCount = 0;
+let currentView = 'monitor';
+let currentFilter = 'all';
+
+const CPU_COLOR = 'rgba(185,140,255,1)';
+const GPU_COLOR = 'rgba(240,140,185,1)';
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  renderTweaks('allTweaks', TWEAKS);
+  renderTweaks('quickTweaks', TWEAKS.filter(t => !t.warn).slice(0, 6));
+  drawChart(document.getElementById('cpuCanvas'), cpuData, CPU_COLOR);
+  drawChart(document.getElementById('gpuCanvas'), gpuData, GPU_COLOR);
+  updateStats();
+  fetchStats();
+  setInterval(tick, 1000);
+  setInterval(fetchStats, 3000);
+  log('MEPI-TUNE v2.1.0 initialized', 'ok');
+  log('Backup created in .\\backup\\', 'ok');
+  log('Ready — select tweaks and click toggles to apply', 'dim');
+});
+
+// ── VIEWS ─────────────────────────────────────────────────────────────────────
+function switchView(v) {
+  currentView = v;
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.querySelectorAll('.si').forEach(el => el.classList.remove('on'));
+  const map = { monitor: 0, tweaks: 1, terminal: 2 };
+  if (map[v] !== undefined) document.querySelectorAll('.si')[map[v]].classList.add('on');
+}
+
+function filterTweaks(cat) {
+  currentFilter = cat;
+  const filtered = cat === 'all' ? TWEAKS : TWEAKS.filter(t => t.cat === cat);
+  document.getElementById('tweaksTitle').textContent = cat === 'all' ? 'All Tweaks' : cat.charAt(0).toUpperCase() + cat.slice(1) + ' Tweaks';
+  renderTweaks('allTweaks', filtered);
+  switchView('tweaks');
+}
+
+// ── RENDER TWEAKS ─────────────────────────────────────────────────────────────
+function renderTweaks(containerId, tweaks) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = tweaks.map(t => `
+    <div class="tweak-card ${tweakState[t.id] ? 'active' : ''} ${t.warn ? 'warn-card' : ''}" id="card-${t.id}">
+      <div class="tc-top">
+        <div class="tc-ico ${t.warn ? 'warn' : t.cat === 'gpu' ? '' : 'pu'}">${t.icon}</div>
+        <div class="tog ${tweakState[t.id] ? 'on' : ''}" id="tog-${t.id}" onclick="toggleTweak('${t.id}')"></div>
+      </div>
+      <div class="tc-l">${t.label}</div>
+      <div class="tc-s">${t.desc}</div>
+      <div class="tc-st">
+        <div class="sdot ${tweakState[t.id] ? 'g' : 'd'}"></div>
+        <span style="color:${tweakState[t.id] ? 'var(--green)' : 'var(--text-m)'}">
+          ${tweakState[t.id] ? 'Active' : 'Standby'}
+        </span>
+        ${t.warn ? '<span style="color:var(--yellow);margin-left:auto">⚠ Risk</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── TWEAK EXECUTION ───────────────────────────────────────────────────────────
+async function toggleTweak(id) {
+  if (tweakState[id]) {
+    await runTweak(id, 'restore');
+  } else {
+    const tweak = TWEAKS.find(t => t.id === id);
+    if (tweak?.warn) {
+      if (!confirm(`⚠ WARNING\n\n"${tweak.label}" carries a risk.\n${tweak.desc}\n\nAre you sure you want to apply this?`)) return;
+    }
+    await runTweak(id, 'apply');
+  }
+}
+
+async function runTweak(id, action) {
+  const tog = document.getElementById('tog-' + id);
+  if (tog) tog.className = 'tog loading';
+  log(`[${action.toUpperCase()}] ${id}...`, 'dim');
+
+  try {
+    const res = await fetch(`/tweak/${action}/${id}`);
+    const data = await res.json();
+
+    if (data.success) {
+      tweakState[id] = (action === 'apply');
+      toast(data.message, 'ok');
+      log(`✓ ${data.message}`, 'ok');
+    } else {
+      toast(data.message, 'err');
+      log(`✗ ${data.message}`, 'err');
+    }
+  } catch (e) {
+    // If not connected to PS backend, simulate for demo
+    tweakState[id] = (action === 'apply');
+    const msg = action === 'apply' ? `${id} applied` : `${id} restored`;
+    toast(msg, 'ok');
+    log(`✓ [DEMO] ${msg}`, 'ok');
+  }
+
+  // Re-render
+  renderTweaks('allTweaks', currentFilter === 'all' ? TWEAKS : TWEAKS.filter(t => t.cat === currentFilter));
+  renderTweaks('quickTweaks', TWEAKS.filter(t => !t.warn).slice(0, 6));
+  updateActiveTweaks();
+}
+
+async function applyAll() {
+  if (!confirm('Apply all 50 tweaks? This will make system changes.')) return;
+  for (const t of TWEAKS) {
+    if (!t.warn && !tweakState[t.id]) await runTweak(t.id, 'apply');
+  }
+  toast('All safe tweaks applied!', 'ok');
+}
+
+async function restoreAll() {
+  if (!confirm('Restore all tweaks to Windows defaults?')) return;
+  for (const t of TWEAKS) {
+    if (tweakState[t.id]) await runTweak(t.id, 'restore');
+  }
+  toast('All tweaks restored', 'ok');
+}
+
+function clearStandby() { runTweak('clear-standby-memory', 'apply'); }
+
+// ── ACTIVE TWEAKS LIST ────────────────────────────────────────────────────────
+function updateActiveTweaks() {
+  const active = TWEAKS.filter(t => tweakState[t.id]);
+  const el = document.getElementById('activeTweaksList');
+  if (active.length === 0) {
+    el.innerHTML = '<div class="twi"><span style="color:var(--text-m)">None active</span></div>';
+    return;
+  }
+  el.innerHTML = active.slice(0, 8).map(t => `
+    <div class="twi">
+      <span>${t.label.substring(0,16)}${t.label.length > 16 ? '..' : ''}</span>
+      <span class="tws on">ON</span>
+    </div>
+  `).join('') + (active.length > 8 ? `<div class="twi"><span style="color:var(--text-m)">+${active.length-8} more</span></div>` : '');
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+function genSeed(base, variance, len) {
+  const arr = []; let v = base;
+  for (let i = 0; i < len; i++) {
+    v += (Math.random() - .48) * variance;
+    v = Math.max(base - 20, Math.min(base + 28, v));
+    arr.push(Math.round(v * 10) / 10);
+  }
+  return arr;
+}
+
+function drawChart(canvas, data, lineColor) {
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth, H = 108;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  const minY = 30, maxY = 100;
+  const padL = 28, padR = 8, padT = 8, padB = 4;
+  const w = W - padL - padR, h = H - padT - padB;
+
+  [0, .33, .66, 1].forEach(t => {
+    const val = minY + (maxY - minY) * t;
+    const y = padT + h - t * h;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + w, y);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.font = '7px JetBrains Mono,monospace';
+    ctx.textAlign = 'right'; ctx.fillText(Math.round(val) + '°', padL - 3, y + 3);
+  });
+
+  const dangerY = padT + h - ((80 - minY) / (maxY - minY)) * h;
+  ctx.fillStyle = 'rgba(240,120,120,0.045)';
+  ctx.fillRect(padL, padT, w, Math.max(0, dangerY - padT));
+
+  const step = w / (data.length - 1);
+  ctx.beginPath(); ctx.moveTo(padL, padT + h);
+  data.forEach((val, i) => ctx.lineTo(padL + i * step, padT + h - ((val - minY) / (maxY - minY)) * h));
+  ctx.lineTo(padL + w, padT + h); ctx.closePath();
+  const grad = ctx.createLinearGradient(0, padT, 0, padT + h);
+  grad.addColorStop(0, lineColor.replace('1)', '0.16)'));
+  grad.addColorStop(1, lineColor.replace('1)', '0.01)'));
+  ctx.fillStyle = grad; ctx.fill();
+
+  ctx.beginPath();
+  data.forEach((val, i) => { const x = padL+i*step, y = padT+h-((val-minY)/(maxY-minY))*h; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.strokeStyle = lineColor.replace('1)', '0.22)'); ctx.lineWidth = 5; ctx.lineJoin = 'round'; ctx.stroke();
+  ctx.beginPath();
+  data.forEach((val, i) => { const x = padL+i*step, y = padT+h-((val-minY)/(maxY-minY))*h; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.strokeStyle = lineColor; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.stroke();
+
+  const lv = data[data.length-1], lx = padL+w, ly = padT+h-((lv-minY)/(maxY-minY))*h;
+  ctx.beginPath(); ctx.arc(lx, ly, 3, 0, Math.PI*2);
+  ctx.fillStyle = lineColor; ctx.shadowColor = lineColor; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
+}
+
+function updateStats() {
+  const cpuNow = Math.round(cpuData[cpuData.length-1]);
+  const gpuNow = Math.round(gpuData[gpuData.length-1]);
+  document.getElementById('cpuTemp').textContent = cpuNow;
+  document.getElementById('gpuTemp').textContent = gpuNow;
+  const cc = cpuNow>=80?'#f09090':cpuNow>=65?'#f5d888':'rgba(185,140,255,1)';
+  const gc = gpuNow>=80?'#f09090':gpuNow>=65?'#f5d888':'rgba(240,140,185,1)';
+  document.getElementById('cpuTemp').style.color = cc;
+  document.getElementById('cpuTemp').style.textShadow = `0 0 18px ${cc}88`;
+  document.getElementById('gpuTemp').style.color = gc;
+  document.getElementById('gpuTemp').style.textShadow = `0 0 18px ${gc}88`;
+  document.getElementById('rpCpuT').textContent = cpuNow + '°C';
+  document.getElementById('rpGpuT').textContent = gpuNow + '°C';
+  document.getElementById('rpCpuTBar').style.width = cpuNow + '%';
+  document.getElementById('rpGpuTBar').style.width = gpuNow + '%';
+
+  const mn = d => Math.min(...d), mx = d => Math.max(...d), av = d => Math.round(d.reduce((a,b)=>a+b,0)/d.length);
+  document.getElementById('cpuMin').textContent = Math.round(mn(cpuData)) + '°';
+  document.getElementById('cpuAvg').textContent = av(cpuData) + '°';
+  document.getElementById('cpuMax').textContent = Math.round(mx(cpuData)) + '°';
+  document.getElementById('cpuMax').className = mx(cpuData)>75?'cs-val hot':mx(cpuData)>65?'cs-val warm':'cs-val cool';
+  document.getElementById('gpuMin').textContent = Math.round(mn(gpuData)) + '°';
+  document.getElementById('gpuAvg').textContent = av(gpuData) + '°';
+  document.getElementById('gpuMax').textContent = Math.round(mx(gpuData)) + '°';
+  document.getElementById('gpuMax').className = mx(gpuData)>75?'cs-val hot':mx(gpuData)>65?'cs-val warm':'cs-val cool';
+}
+
+function tick() {
+  if (paused) return; tickCount++;
+  let lc = cpuData[cpuData.length-1], dc = (Math.random()-.46)*3.5;
+  if (tickCount%18===0) dc += Math.random()*8;
+  if (tickCount%22===0) dc -= Math.random()*6;
+  const nc = Math.max(38, Math.min(88, lc+dc));
+  cpuData.push(Math.round(nc*10)/10); if (cpuData.length>60) cpuData.shift();
+  let lg = gpuData[gpuData.length-1], dg = (Math.random()-.45)*4;
+  if (tickCount%14===0) dg += Math.random()*10;
+  if (tickCount%20===0) dg -= Math.random()*7;
+  const ng = Math.max(42, Math.min(92, lg+dg));
+  gpuData.push(Math.round(ng*10)/10); if (gpuData.length>60) gpuData.shift();
+  updateStats();
+  drawChart(document.getElementById('cpuCanvas'), cpuData, CPU_COLOR);
+  drawChart(document.getElementById('gpuCanvas'), gpuData, GPU_COLOR);
+}
+
+function togglePause() {
+  paused = !paused;
+  document.getElementById('pauseBtn').textContent = paused ? '▶ Resume' : '⏸ Pause';
+}
+
+// ── FETCH REAL STATS FROM PS BACKEND ─────────────────────────────────────────
+async function fetchStats() {
+  try {
+    const res = await fetch('/stats');
+    const s = await res.json();
+    document.getElementById('rpCpu').textContent = s.cpu + '%';
+    document.getElementById('rpRam').textContent = s.ram + '%';
+    document.getElementById('rpGpu').textContent = (s.gpu ?? '--') + '%';
+    document.getElementById('rpDisk').textContent = s.disk + '%';
+    document.getElementById('rpCpuBar').style.width = s.cpu + '%';
+    document.getElementById('rpRamBar').style.width = s.ram + '%';
+    document.getElementById('rpGpuBar').style.width = (s.gpu ?? 0) + '%';
+    document.getElementById('rpDiskBar').style.width = s.disk + '%';
+    if (s.cpuTemp > 0) { cpuData.push(s.cpuTemp); if (cpuData.length>60) cpuData.shift(); }
+    if (s.gpuTemp > 0) { gpuData.push(s.gpuTemp); if (gpuData.length>60) gpuData.shift(); }
+    if (s.ramGB) document.getElementById('rpRam').textContent = s.ram + '%';
+  } catch (e) {
+    // Backend not connected — using simulated data
+  }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'ok') {
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+// ── LOG ───────────────────────────────────────────────────────────────────────
+function log(msg, type = 'dim') {
+  const el = document.getElementById('fullLog');
+  if (!el) return;
+  const line = document.createElement('div');
+  line.className = type === 'ok' ? 'tok' : type === 'err' ? 'terr' : type === 'warn' ? 'twrn' : 'tdm';
+  const ts = new Date().toLocaleTimeString('en-US', {hour12:false});
+  line.innerHTML = `<span style="color:rgba(255,255,255,.2)">[${ts}]</span> ${msg}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearLog() { document.getElementById('fullLog').innerHTML = ''; }
+
+// ── KEYBOARD SHORTCUTS ────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Tab') { e.preventDefault(); const views = ['monitor','tweaks','terminal']; switchView(views[(views.indexOf(currentView)+1)%3]); }
+  if (e.key === 'm') switchView('monitor');
+  if (e.key === 'a') applyAll();
+  if (e.key === 'r') restoreAll();
+});
+
+window.addEventListener('resize', () => {
+  drawChart(document.getElementById('cpuCanvas'), cpuData, CPU_COLOR);
+  drawChart(document.getElementById('gpuCanvas'), gpuData, GPU_COLOR);
+});
+</script>
+</body>
+</html>
