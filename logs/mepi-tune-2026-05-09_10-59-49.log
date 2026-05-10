@@ -1,0 +1,69 @@
+[2026-05-09 10:59:49] [INFO] MEPI-TUNE v2.1.0 started
+[2026-05-09 10:59:49] [INFO] Creating backup before any changes...
+[2026-05-09 10:59:49] [INFO] Creating system restore point...
+[2026-05-09 10:59:49] [INFO] System restore point created
+[2026-05-09 10:59:49] [INFO] Backing up registry keys...
+[2026-05-09 10:59:49] [INFO] Registry backup complete -> C:\Users\Admin\Desktop\mepi-tune (2)\mepi-tune\backup\
+[2026-05-09 10:59:49] [INFO] Launching UI on http://localhost:7420 ...
+[2026-05-09 10:59:49] [INFO] UI server started on http://localhost:7420
+[2026-05-09 10:59:59] [INFO] [apply] auto-login
+[2026-05-09 11:00:08] [INFO] [apply] auto-login -> Auto login enabled for Admin
+[2026-05-09 11:00:11] [INFO] [apply] kernel-worker-threads
+[2026-05-09 11:00:13] [INFO] [apply] kernel-worker-threads -> Kernel worker threads set to 8 (logical cores)
+[2026-05-09 11:00:15] [INFO] [apply] disable-hyperv
+[2026-05-09 11:00:15] [INFO] [apply] disable-hyperv -> Hyper-V disabled via bcdedit. Reboot required.
+[2026-05-09 11:00:18] [INFO] [apply] win32-priority
+[2026-05-09 11:00:18] [INFO] [apply] win32-priority -> Win32PrioritySeparation set to 18 (was 18)
+[2026-05-09 11:00:23] [INFO] [apply] scheduling-reserve
+[2026-05-09 11:00:23] [INFO] [apply] scheduling-reserve -> SystemResponsiveness set to 0 (full CPU for foreground)
+[2026-05-09 11:00:25] [INFO] [apply] disable-telemetry
+[2026-05-09 11:00:25] [INFO] [apply] disable-telemetry -> Telemetry fully disabled. Services stopped, hosts blocked.
+[2026-05-09 11:00:43] [INFO] [apply] disable-spectre-meltdown
+[2026-05-09 11:00:43] [INFO] [apply] disable-spectre-meltdown -> WARNING: Spectre/Meltdown mitigations disabled. Reboot required.
+[2026-05-09 11:00:46] [INFO] [apply] disable-cpu-parking
+[2026-05-09 11:00:46] [INFO] [apply] disable-cpu-parking -> CPU parking disabled - all cores active
+[2026-05-09 11:00:47] [INFO] [apply] power-throttling-off
+[2026-05-09 11:00:47] [INFO] [apply] power-throttling-off -> Power throttling disabled
+[2026-05-09 11:00:48] [INFO] [apply] power-plan
+[2026-05-09 11:00:49] [INFO] [apply] power-plan -> MEPI Power Plan imported and activated
+[2026-05-09 11:00:51] [INFO] [apply] disable-cstates
+[2026-05-09 11:00:51] [INFO] [apply] disable-cstates -> C-States disabled for current power scheme. Reboot recommended.
+[2026-05-09 11:00:52] [INFO] [apply] timer-resolution
+[2026-05-09 11:00:52] [INFO] [apply] timer-resolution -> Timer resolution set to 0.700ms
+[2026-05-09 11:01:00] [INFO] [apply] disable-memory-compression
+[2026-05-09 11:01:03] [INFO] [apply] disable-memory-compression -> Memory compression disabled
+[2026-05-09 11:01:03] [INFO] [apply] clear-standby-memory
+[2026-05-09 11:01:04] [INFO] [apply] clear-standby-memory -> Standby memory cleared
+[2026-05-09 11:01:05] [INFO] [apply] disable-superfetch
+[2026-05-09 11:01:09] [INFO] [apply] disable-superfetch -> SysMain/Superfetch/Prefetch disabled
+[2026-05-09 11:01:10] [INFO] [apply] disable-superfetch
+[2026-05-09 11:01:10] [INFO] [apply] disable-superfetch -> SysMain/Superfetch/Prefetch disabled
+[2026-05-09 11:01:16] [INFO] [apply] disable-animations
+[2026-05-09 11:01:16] [INFO] [apply] disable-animations -> All system animations disabled
+[2026-05-09 11:01:17] [INFO] [apply] disable-hpet
+[2026-05-09 11:01:18] [INFO] [apply] disable-hpet -> HPET disabled. TSC timer active. Reboot recommended.
+[2026-05-09 11:01:19] [INFO] [apply] disable-xbox-gamebar
+[2026-05-09 11:01:20] [INFO] [apply] disable-xbox-gamebar -> Xbox Game Bar disabled and removed
+[2026-05-09 11:01:23] [INFO] [apply] enable-hags
+[2026-05-09 11:01:23] [INFO] [apply] enable-hags -> Hardware Accelerated GPU Scheduling enabled. Reboot required.
+[2026-05-09 11:01:25] [INFO] [apply] gpu-max-performance
+[2026-05-09 11:01:25] [INFO] [apply] gpu-max-performance -> GPU set to maximum performance mode
+[2026-05-09 11:01:27] [INFO] [apply] disable-nvidia-telemetry
+[2026-05-09 11:01:33] [INFO] [apply] disable-nvidia-telemetry -> NVIDIA telemetry disabled
+[2026-05-09 11:01:33] [INFO] [apply] disk-tweaks
+[2026-05-09 11:01:35] [INFO] [apply] disk-tweaks -> Disk tweaks applied: 8.3 off, last access off, pagefile fixed 4-8GB
+[2026-05-09 11:01:36] [INFO] [apply] network-tweaks
+[2026-05-09 11:01:39] [INFO] [apply] network-tweaks -> All network tweaks applied: DNS, Nagle, TCP, Winsock, routing optimized
+[2026-05-09 11:01:39] [INFO] [restore] disk-tweaks
+[2026-05-09 11:01:39] [INFO] [restore] disk-tweaks -> Disk tweaks restored
+[2026-05-09 11:01:40] [INFO] [apply] network-tweaks
+[2026-05-09 11:01:40] [INFO] [apply] network-tweaks -> All network tweaks applied: DNS, Nagle, TCP, Winsock, routing optimized
+[2026-05-09 11:01:42] [INFO] [apply] disk-tweaks
+[2026-05-09 11:01:43] [INFO] [apply] disk-tweaks -> Disk tweaks applied: 8.3 off, last access off, pagefile fixed 4-8GB
+[2026-05-09 11:01:44] [INFO] [apply] raw-mouse-input
+[2026-05-09 11:01:44] [INFO] [apply] raw-mouse-input -> Raw mouse input enabled - pointer acceleration disabled
+[2026-05-09 11:01:46] [INFO] [apply] disable-services
+[2026-05-09 11:01:48] [INFO] [apply] disable-services -> Background services disabled: Search, Print Spooler, Delivery Opt, Remote Registry
+[2026-05-09 11:01:57] [INFO] [apply] game-mode
+[2026-05-09 11:01:57] [INFO] [apply] game-mode -> Game Mode enabled, Game DVR disabled
+[2026-05-09 11:02:02] [INFO] [apply] debloat
