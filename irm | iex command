@@ -1,0 +1,1 @@
+irm https://raw.githubusercontent.com/MEPI1234/mepi-tune/main/install.ps1 | iex
